@@ -1,0 +1,10 @@
+{
+    "recommendations": [
+        "dart-code.dart-code",
+        "dart-code.flutter",
+        "dotjoshjohnson.xml",
+        "editorconfig.editorconfig",
+        "esbenp.prettier-vscode",
+        "oderwat.indent-rainbow"
+    ]
+}
