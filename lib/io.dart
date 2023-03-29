@@ -8,6 +8,15 @@ class IO {
     return directory.path;
   }
 
+  static Future<List<String>> list() async {
+    final path = await _localPath;
+    final dir = Directory(path);
+    return dir
+        .list()
+        .map((entity) => entity.path.substring(path.length + 1))
+        .toList();
+  }
+
   static Future<File> _open(final String filename) async {
     final path = await _localPath;
     return File('$path/$filename');
