@@ -2,7 +2,7 @@ import 'dart:convert';
 import 'package:geolocator/geolocator.dart';
 
 class Tracker {
-  final List<List<num>> _locations = [];
+  final List<Position> _positions = [];
 
   static Future<void> requestPermission() async {
     if (!await Geolocator.isLocationServiceEnabled()) {
@@ -24,13 +24,16 @@ class Tracker {
   }
 
   void addLocation(final Position position) {
-    _locations.add([
-      position.latitude,
-      position.longitude,
-      position.altitude,
-      position.timestamp?.microsecondsSinceEpoch ??
-          DateTime.now().microsecondsSinceEpoch
-    ]);
+    _positions.add(Position(
+        latitude: position.latitude,
+        longitude: position.longitude,
+        timestamp: position.timestamp ?? DateTime.now(),
+        accuracy: position.accuracy,
+        altitude: position.altitude,
+        heading: position.heading,
+        speed: position.speed,
+        speedAccuracy: position.speedAccuracy,
+        floor: position.floor));
   }
 
   Future<Tracker> determineLocation() async {
@@ -40,16 +43,10 @@ class Tracker {
     return this;
   }
 
-  DateTime? get firstTrack => _locations.isEmpty
-      ? null
-      : DateTime.fromMicrosecondsSinceEpoch(_locations[0][3].toInt(),
-          isUtc: true);
+  Position? get firstPosition => _positions.isEmpty ? null : _positions[0];
 
-  DateTime? get lastTrack => _locations.isEmpty
-      ? null
-      : DateTime.fromMicrosecondsSinceEpoch(
-          _locations[_locations.length - 1][3].toInt(),
-          isUtc: true);
+  Position? get lastPosition =>
+      _positions.isEmpty ? null : _positions[_positions.length - 1];
 
   @override
   String toString() {
@@ -60,10 +57,10 @@ class Tracker {
           'type': 'Feature',
           'properties': {
             'vendor': 'Satoshi Ogata',
-            'start': firstTrack?.toIso8601String(),
-            'end': lastTrack?.toIso8601String()
+            'start': firstPosition?.timestamp?.toIso8601String(),
+            'end': lastPosition?.timestamp?.toIso8601String()
           },
-          'geometry': {'type': 'LineString', 'coordinates': _locations}
+          'geometry': {'type': 'LineString', 'coordinates': _positions}
         }
       ]
     });
