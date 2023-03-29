@@ -23,6 +23,10 @@ class Tracker {
     }
   }
 
+  void addLocations(final List<Position> positions) {
+    _positions.addAll(positions);
+  }
+
   void addLocation(final Position position) {
     _positions.add(Position(
         latitude: position.latitude,
