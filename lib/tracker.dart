@@ -23,14 +23,19 @@ class Tracker {
     }
   }
 
-  Future<Tracker> determineLocation() async {
-    final position = await Geolocator.getCurrentPosition();
+  void addLocation(final Position position) {
     _locations.add([
       position.latitude,
       position.longitude,
       position.altitude,
-      DateTime.now().microsecondsSinceEpoch
+      position.timestamp?.microsecondsSinceEpoch ??
+          DateTime.now().microsecondsSinceEpoch
     ]);
+  }
+
+  Future<Tracker> determineLocation() async {
+    final position = await Geolocator.getCurrentPosition();
+    addLocation(position);
 
     return this;
   }
