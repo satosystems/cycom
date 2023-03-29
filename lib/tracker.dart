@@ -4,7 +4,7 @@ import 'package:geolocator/geolocator.dart';
 class Tracker {
   final List<List<num>> _locations = [];
 
-  Future<Tracker> determineLocation() async {
+  static Future<void> requestPermission() async {
     if (!await Geolocator.isLocationServiceEnabled()) {
       return Future.error('Location services are disabled.');
     }
@@ -21,7 +21,9 @@ class Tracker {
       return Future.error(
           'Location permissions are permanently denied, we cannot request permissions.');
     }
+  }
 
+  Future<Tracker> determineLocation() async {
     final position = await Geolocator.getCurrentPosition();
     _locations.add([
       position.latitude,
