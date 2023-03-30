@@ -73,8 +73,9 @@ class ListPageState extends State<ListPage> {
                 final List<Position> positions = [];
                 await Navigator.of(context).push(
                   MaterialPageRoute(
-                      builder: (context) => MapPage(
-                          routeObserver: routeObserver, positions: positions)),
+                    builder: (context) => MapPage(
+                        routeObserver: routeObserver, positions: positions),
+                  ),
                 );
                 if (positions.isNotEmpty) {
                   setState(() {

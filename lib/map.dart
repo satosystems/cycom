@@ -16,6 +16,7 @@ class MapPage extends StatefulWidget {
 }
 
 class MapPageState extends State<MapPage> with RouteAware {
+  final double _zoom = 16;
   GoogleMapController? _gmc;
   StreamSubscription<Position>? _subscription;
   late Future<CameraPosition> _future;
@@ -30,7 +31,7 @@ class MapPageState extends State<MapPage> with RouteAware {
     _future = Future(() async {
       final position = await Geolocator.getCurrentPosition();
       return CameraPosition(
-          target: LatLng(position.latitude, position.longitude), zoom: 16);
+          target: LatLng(position.latitude, position.longitude), zoom: _zoom);
     });
 
     _subscription =
@@ -41,11 +42,9 @@ class MapPageState extends State<MapPage> with RouteAware {
           : 'Position: ${position.timestamp}, ${position.latitude}, ${position.longitude}');
       if (position != null) {
         widget.positions.add(position);
-        if (_gmc != null) {
-          _gmc!.animateCamera(CameraUpdate.newCameraPosition(CameraPosition(
-              target: LatLng(position.latitude, position.longitude),
-              zoom: 16)));
-        }
+        _gmc?.animateCamera(CameraUpdate.newCameraPosition(CameraPosition(
+            target: LatLng(position.latitude, position.longitude),
+            zoom: _zoom)));
       }
     });
   }
