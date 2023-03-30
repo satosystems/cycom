@@ -18,11 +18,7 @@ class MapPage extends StatefulWidget {
 class MapPageState extends State<MapPage> with RouteAware {
   GoogleMapController? _gmc;
   StreamSubscription<Position>? _subscription;
-  final _kGooglePlex = const CameraPosition(
-    target: LatLng(35.12694, 136.28902),
-    zoom: 16,
-  );
-
+  late Future<CameraPosition> _future;
   final locationSettings = const LocationSettings(
     accuracy: LocationAccuracy.high,
     distanceFilter: 100,
@@ -31,6 +27,12 @@ class MapPageState extends State<MapPage> with RouteAware {
   @override
   void initState() {
     super.initState();
+    _future = Future(() async {
+      final position = await Geolocator.getCurrentPosition();
+      return CameraPosition(
+          target: LatLng(position.latitude, position.longitude), zoom: 16);
+    });
+
     _subscription =
         Geolocator.getPositionStream(locationSettings: locationSettings)
             .listen((Position? position) {
@@ -50,12 +52,29 @@ class MapPageState extends State<MapPage> with RouteAware {
 
   @override
   Widget build(BuildContext context) {
-    return GoogleMap(
-      mapType: MapType.normal,
-      initialCameraPosition: _kGooglePlex,
-      myLocationEnabled: true,
-      onMapCreated: (GoogleMapController controller) => _gmc = controller,
-    );
+    return FutureBuilder(
+        future: _future,
+        builder: (context, snapshot) {
+          return snapshot.connectionState == ConnectionState.done
+              ? GoogleMap(
+                  mapType: MapType.normal,
+                  initialCameraPosition: snapshot.data!,
+                  myLocationEnabled: true,
+                  onMapCreated: (GoogleMapController controller) =>
+                      _gmc = controller,
+                )
+              : Scaffold(
+                  body: Center(
+                    child: Column(
+                      mainAxisSize: MainAxisSize.min,
+                      children: <Widget>[
+                        Text(snapshot.connectionState.name,
+                            style: const TextStyle(fontSize: 24)),
+                      ],
+                    ),
+                  ),
+                );
+        });
   }
 
   @override
