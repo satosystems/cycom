@@ -8,12 +8,13 @@ class IO {
     return directory.path;
   }
 
-  static Future<List<String>> list() async {
+  static Future<List<String>> list({final RegExp? filter}) async {
     final path = await _localPath;
     final dir = Directory(path);
     return dir
         .list()
         .map((entity) => entity.path.substring(path.length + 1))
+        .where((filename) => filter?.hasMatch(filename) ?? true)
         .toList();
   }
 

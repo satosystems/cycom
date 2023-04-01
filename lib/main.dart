@@ -44,7 +44,7 @@ class ListPageState extends State<ListPage> {
   void initState() {
     super.initState();
     _future = Future(() async {
-      return await IO.list();
+      return await IO.list(filter: RegExp(r'.+\.geojson'));
     });
   }
 
@@ -83,8 +83,8 @@ class ListPageState extends State<ListPage> {
                     tracker.addLocations(positions);
                     final startTimestamp =
                         tracker.firstPosition!.timestamp!.toIso8601String();
-                    final filename = '$startTimestamp.json';
                     IO.write(filename, tracker.toString());
+                    final filename = '$startTimestamp.geojson';
                     snapshot.data!.add(filename);
                   });
                 }
