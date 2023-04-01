@@ -38,6 +38,7 @@ dependencies:
   path_provider: ^2.0.14
   google_maps_flutter: ^2.2.5
   http: ^0.13.5
+  settings_ui: ^2.0.2
 
 dev_dependencies:
   flutter_test:
