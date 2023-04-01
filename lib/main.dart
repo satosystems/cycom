@@ -77,14 +77,17 @@ class ListPageState extends State<ListPage> {
                         routeObserver: routeObserver, positions: positions),
                   ),
                 );
+                debugPrint('### positions.length: ${positions.length}');
                 if (positions.isNotEmpty) {
                   setState(() {
                     final tracker = Tracker();
                     tracker.addLocations(positions);
                     final startTimestamp =
                         tracker.firstPosition!.timestamp!.toIso8601String();
-                    IO.write(filename, tracker.toString());
                     final filename = '$startTimestamp.geojson';
+                    IO.write(filename, tracker.toString()).then((file) {
+                      debugPrint('### done: $file');
+                    });
                     snapshot.data!.add(filename);
                   });
                 }

@@ -38,8 +38,8 @@ class MapPageState extends State<MapPage> with RouteAware {
         Geolocator.getPositionStream(locationSettings: locationSettings)
             .listen((Position? position) {
       debugPrint(position == null
-          ? 'Unknown'
-          : 'Position: ${position.timestamp}, ${position.latitude}, ${position.longitude}');
+          ? '### Unknown'
+          : '### Position: ${position.timestamp}, ${position.latitude}, ${position.longitude}');
       if (position != null) {
         widget.positions.add(position);
         _gmc?.animateCamera(CameraUpdate.newCameraPosition(CameraPosition(
