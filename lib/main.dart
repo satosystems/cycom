@@ -3,6 +3,7 @@ import 'package:geolocator/geolocator.dart';
 
 import 'io.dart';
 import 'map.dart';
+import 'settings.dart';
 import 'tracker.dart';
 
 final RouteObserver<PageRoute> routeObserver = RouteObserver<PageRoute>();
@@ -57,6 +58,21 @@ class ListPageState extends State<ListPage> {
             appBar: AppBar(
               title: const Text('Trackers'),
             ),
+            drawer: Drawer(
+                child: ListView(children: [
+              const DrawerHeader(
+                  decoration: BoxDecoration(color: Colors.blue),
+                  child: Text("Cycom")),
+              ListTile(
+                title: const Text("GitHub"),
+                onTap: () {
+                  Navigator.pop(context);
+                  Navigator.of(context).push(MaterialPageRoute(
+                      builder: (context) =>
+                          SettingsPage(routeObserver: routeObserver)));
+                },
+              ),
+            ])),
             body: snapshot.connectionState == ConnectionState.done
                 ? ListView.builder(
                     itemCount: snapshot.data!.length,
