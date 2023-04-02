@@ -4,6 +4,24 @@ import 'package:settings_ui/settings_ui.dart';
 
 import 'io.dart';
 
+const OWNER = 'owner';
+const REPO = 'repo';
+const BRANCH = 'branch';
+const ACCESS_TOKEN = 'accessToken';
+
+Future<dynamic> loadSettings() async {
+  const defaultJson =
+      '{"$OWNER": "", "$REPO": "", "$BRANCH": "", "$ACCESS_TOKEN": ""}';
+  late String json;
+  final list = await IO.list(filter: RegExp(r'settings\.json'));
+  if (list.isNotEmpty) {
+    json = await IO.read(list.first) ?? defaultJson;
+  } else {
+    json = defaultJson;
+  }
+  return jsonDecode(json);
+}
+
 class SettingsPage extends StatefulWidget {
   final RouteObserver<ModalRoute<void>> routeObserver;
 
@@ -29,16 +47,7 @@ class SettingsPageState extends State<SettingsPage> with RouteAware {
   void initState() {
     super.initState();
     _future = Future(() async {
-      const defaultJson =
-          '{"owner": "", "repo": "", "branch": "", "accessToken": ""}';
-      late String json;
-      final list = await IO.list(filter: RegExp(r'settings\.json'));
-      if (list.isNotEmpty) {
-        json = await IO.read(list.first) ?? defaultJson;
-      } else {
-        json = defaultJson;
-      }
-      _settings = jsonDecode(json);
+      _settings = await loadSettings();
       return _settings;
     });
   }
@@ -50,19 +59,19 @@ class SettingsPageState extends State<SettingsPage> with RouteAware {
         builder: (context, snapshot) {
           _controllerOfOwner = TextEditingController(
               text: snapshot.connectionState == ConnectionState.done
-                  ? _settings['owner']
+                  ? _settings[OWNER]
                   : '');
           _controllerOfRepo = TextEditingController(
               text: snapshot.connectionState == ConnectionState.done
-                  ? _settings['repo']
+                  ? _settings[REPO]
                   : '');
           _controllerOfBranch = TextEditingController(
               text: snapshot.connectionState == ConnectionState.done
-                  ? _settings['branch']
+                  ? _settings[BRANCH]
                   : '');
           _controllerOfAccessToken = TextEditingController(
               text: snapshot.connectionState == ConnectionState.done
-                  ? _settings['accessToken']
+                  ? _settings[ACCESS_TOKEN]
                   : '');
           return Scaffold(
               appBar: AppBar(
@@ -75,25 +84,25 @@ class SettingsPageState extends State<SettingsPage> with RouteAware {
                       title: const Text('Owner'),
                       value: TextField(
                           controller: _controllerOfOwner,
-                          onChanged: (text) => _update('owner', text))),
+                          onChanged: (text) => _update(OWNER, text))),
                   SettingsTile.navigation(
                       leading: const Icon(Icons.table_rows),
                       title: const Text('Repository'),
                       value: TextField(
                           controller: _controllerOfRepo,
-                          onChanged: (text) => _update('repo', text))),
+                          onChanged: (text) => _update(REPO, text))),
                   SettingsTile.navigation(
                       leading: const Icon(Icons.fork_right),
                       title: const Text('Branch'),
                       value: TextField(
                           controller: _controllerOfBranch,
-                          onChanged: (text) => _update('branch', text))),
+                          onChanged: (text) => _update(BRANCH, text))),
                   SettingsTile.navigation(
                       leading: const Icon(Icons.key),
                       title: const Text('Access Token'),
                       value: TextField(
                           controller: _controllerOfAccessToken,
-                          onChanged: (text) => _update('accessToken', text)))
+                          onChanged: (text) => _update(ACCESS_TOKEN, text)))
                 ])
               ]));
         });
