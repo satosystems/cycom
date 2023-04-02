@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:geolocator/geolocator.dart';
 
+import 'github.dart';
 import 'io.dart';
 import 'map.dart';
 import 'settings.dart';
@@ -103,6 +104,17 @@ class ListPageState extends State<ListPage> {
                     final filename = '$startTimestamp.geojson';
                     IO.write(filename, tracker.toString()).then((file) {
                       debugPrint('### done: $file');
+                      loadSettings()
+                          .then((settings) => GitHub.pushFile(
+                              settings[ACCESS_TOKEN],
+                              settings[OWNER],
+                              settings[REPO],
+                              settings[BRANCH],
+                              file,
+                              'Add by Cycom',
+                              'Cycom',
+                              'cycom@example.com'))
+                          .then((_) => debugPrint('### push complete: $file'));
                     });
                     snapshot.data!.add(filename);
                   });
