@@ -4,14 +4,14 @@ import 'package:settings_ui/settings_ui.dart';
 
 import 'io.dart';
 
-const OWNER = 'owner';
-const REPO = 'repo';
-const BRANCH = 'branch';
-const ACCESS_TOKEN = 'accessToken';
+const owner = 'owner';
+const repo = 'repo';
+const branch = 'branch';
+const accessToken = 'accessToken';
 
 Future<dynamic> loadSettings() async {
   const defaultJson =
-      '{"$OWNER": "", "$REPO": "", "$BRANCH": "", "$ACCESS_TOKEN": ""}';
+      '{"$owner": "", "$repo": "", "$branch": "", "$accessToken": ""}';
   late String json;
   final list = await IO.list(filter: RegExp(r'settings\.json'));
   if (list.isNotEmpty) {
@@ -59,19 +59,19 @@ class SettingsPageState extends State<SettingsPage> with RouteAware {
         builder: (context, snapshot) {
           _controllerOfOwner = TextEditingController(
               text: snapshot.connectionState == ConnectionState.done
-                  ? _settings[OWNER]
+                  ? _settings[owner]
                   : '');
           _controllerOfRepo = TextEditingController(
               text: snapshot.connectionState == ConnectionState.done
-                  ? _settings[REPO]
+                  ? _settings[repo]
                   : '');
           _controllerOfBranch = TextEditingController(
               text: snapshot.connectionState == ConnectionState.done
-                  ? _settings[BRANCH]
+                  ? _settings[branch]
                   : '');
           _controllerOfAccessToken = TextEditingController(
               text: snapshot.connectionState == ConnectionState.done
-                  ? _settings[ACCESS_TOKEN]
+                  ? _settings[accessToken]
                   : '');
           return Scaffold(
               appBar: AppBar(
@@ -84,25 +84,25 @@ class SettingsPageState extends State<SettingsPage> with RouteAware {
                       title: const Text('Owner'),
                       value: TextField(
                           controller: _controllerOfOwner,
-                          onChanged: (text) => _update(OWNER, text))),
+                          onChanged: (text) => _update(owner, text))),
                   SettingsTile.navigation(
                       leading: const Icon(Icons.table_rows),
                       title: const Text('Repository'),
                       value: TextField(
                           controller: _controllerOfRepo,
-                          onChanged: (text) => _update(REPO, text))),
+                          onChanged: (text) => _update(repo, text))),
                   SettingsTile.navigation(
                       leading: const Icon(Icons.fork_right),
                       title: const Text('Branch'),
                       value: TextField(
                           controller: _controllerOfBranch,
-                          onChanged: (text) => _update(BRANCH, text))),
+                          onChanged: (text) => _update(branch, text))),
                   SettingsTile.navigation(
                       leading: const Icon(Icons.key),
                       title: const Text('Access Token'),
                       value: TextField(
                           controller: _controllerOfAccessToken,
-                          onChanged: (text) => _update(ACCESS_TOKEN, text)))
+                          onChanged: (text) => _update(accessToken, text)))
                 ])
               ]));
         });

@@ -106,10 +106,10 @@ class ListPageState extends State<ListPage> {
                       debugPrint('### done: $file');
                       loadSettings()
                           .then((settings) => GitHub.pushFile(
-                              settings[ACCESS_TOKEN],
-                              settings[OWNER],
-                              settings[REPO],
-                              settings[BRANCH],
+                              settings[accessToken],
+                              settings[owner],
+                              settings[repo],
+                              settings[branch],
                               file,
                               'Add by Cycom',
                               'Cycom',
