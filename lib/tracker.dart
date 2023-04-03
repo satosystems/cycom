@@ -55,18 +55,14 @@ class Tracker {
   @override
   String toString() {
     return jsonEncode({
-      'type': 'FeatureCollection',
-      'features': [
-        {
-          'type': 'Feature',
-          'properties': {
-            'vendor': 'Satoshi Ogata',
-            'start': firstPosition?.timestamp?.toIso8601String(),
-            'end': lastPosition?.timestamp?.toIso8601String()
-          },
-          'geometry': {'type': 'LineString', 'coordinates': _positions}
-        }
-      ]
+      'type': 'LineString',
+      'crs': {
+        'type': 'name',
+        'properties': {'name': 'urn:ogc:def:crs:OGC:1.3:CRS84'}
+      },
+      'coordinates': _positions
+          .map((position) => [position.longitude, position.latitude])
+          .toList()
     });
   }
 }
