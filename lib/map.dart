@@ -84,7 +84,7 @@ class MapPageState extends State<MapPage> with RouteAware {
   }
 
   @override
-  void dispose() async {
+  void dispose() {
     debugPrint('### dispose');
     widget.routeObserver.unsubscribe(this);
     super.dispose();

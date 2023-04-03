@@ -116,7 +116,7 @@ class SettingsPageState extends State<SettingsPage> with RouteAware {
   }
 
   @override
-  void dispose() async {
+  void dispose() {
     debugPrint('### dispose');
     widget.routeObserver.unsubscribe(this);
     super.dispose();
