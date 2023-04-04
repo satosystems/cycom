@@ -104,23 +104,21 @@ class ListPageState extends State<ListPage> {
                     final filename = '$startTimestamp.geojson';
                     IO.write(filename, tracker.toString()).then((file) {
                       debugPrint('### done: $file');
-                      loadSettings()
-                          .then((settings) => GitHub.pushFile(
-                              settings[accessToken],
-                              settings[owner],
-                              settings[repo],
-                              settings[branch],
-                              file,
-                              'Add by Cycom',
-                              'Cycom',
-                              'cycom@example.com'))
-                          .then((isSucceeded) {
-                        if (isSucceeded) {
-                          debugPrint('### push complete: $filename');
-                        } else {
-                          debugPrint('### push failed: $filename');
-                        }
-                      }).then((_) => {});
+                      return loadSettings().then((settings) => GitHub.pushFile(
+                          settings[accessToken],
+                          settings[owner],
+                          settings[repo],
+                          settings[branch],
+                          file,
+                          'Add by Cycom',
+                          'Cycom',
+                          'cycom@example.com'));
+                    }).then((isSucceeded) {
+                      if (isSucceeded) {
+                        debugPrint('### push complete: $filename');
+                      } else {
+                        debugPrint('### push failed: $filename');
+                      }
                     });
                     snapshot.data!.add(filename);
                   });
