@@ -114,7 +114,13 @@ class ListPageState extends State<ListPage> {
                               'Add by Cycom',
                               'Cycom',
                               'cycom@example.com'))
-                          .then((_) => debugPrint('### push complete: $file'));
+                          .then((isSucceeded) {
+                        if (isSucceeded) {
+                          debugPrint('### push complete: $filename');
+                        } else {
+                          debugPrint('### push failed: $filename');
+                        }
+                      }).then((_) => {});
                     });
                     snapshot.data!.add(filename);
                   });

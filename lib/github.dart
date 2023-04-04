@@ -125,7 +125,7 @@ class GitHub {
   }
 
   // Push file
-  static Future<void> pushFile(
+  static Future<bool> pushFile(
       final String accessToken,
       final String owner,
       final String repo,
@@ -134,26 +134,33 @@ class GitHub {
       final String message,
       final String author,
       final String email) async {
-    final filename = file.path.split('/').last;
-    debugPrint('### filename: $filename');
-    final contents = await file.readAsString();
-    debugPrint('### contents: $contents');
-    final headers = _createHeaders(accessToken);
-    debugPrint('### headers: $headers');
-    final shaOfParent =
-        await _getCommitUrlFromBranchHead(headers, owner, repo, branch);
-    debugPrint('### shaOfParent: $shaOfParent');
-    final shaOfBaseTree = await _getCommit(headers, owner, repo, shaOfParent);
-    debugPrint('### shaOfBaseTree: $shaOfBaseTree');
-    final shaOfBlob = await _createBlob(headers, owner, repo, contents);
-    debugPrint('### shaOfBlob: $shaOfBlob');
-    final shaOfTree = await _createTree(
-        headers, owner, repo, shaOfBaseTree, shaOfBlob, filename);
-    debugPrint('### shaOfTree: $shaOfTree');
-    final shaOfCommit = await _createCommit(
-        headers, owner, repo, message, author, email, shaOfParent, shaOfTree);
-    debugPrint('### shaOfCommit: $shaOfCommit');
-    final ref = await _updateRef(headers, owner, repo, branch, shaOfCommit);
-    debugPrint('### ref: $ref');
+    try {
+      final filename = file.path.split('/').last;
+      debugPrint('### filename: $filename');
+      final contents = await file.readAsString();
+      debugPrint('### contents: $contents');
+      final headers = _createHeaders(accessToken);
+      debugPrint('### headers: $headers');
+      final shaOfParent =
+          await _getCommitUrlFromBranchHead(headers, owner, repo, branch);
+      debugPrint('### shaOfParent: $shaOfParent');
+      final shaOfBaseTree = await _getCommit(headers, owner, repo, shaOfParent);
+      debugPrint('### shaOfBaseTree: $shaOfBaseTree');
+      final shaOfBlob = await _createBlob(headers, owner, repo, contents);
+      debugPrint('### shaOfBlob: $shaOfBlob');
+      final shaOfTree = await _createTree(
+          headers, owner, repo, shaOfBaseTree, shaOfBlob, filename);
+      debugPrint('### shaOfTree: $shaOfTree');
+      final shaOfCommit = await _createCommit(
+          headers, owner, repo, message, author, email, shaOfParent, shaOfTree);
+      debugPrint('### shaOfCommit: $shaOfCommit');
+      final ref = await _updateRef(headers, owner, repo, branch, shaOfCommit);
+      debugPrint('### ref: $ref');
+      return true;
+    } catch (e, stackTrace) {
+      debugPrint(e.toString());
+      debugPrintStack(stackTrace: stackTrace);
+      return false;
+    }
   }
 }
